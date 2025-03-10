@@ -34,7 +34,9 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Account")),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text("Account")),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

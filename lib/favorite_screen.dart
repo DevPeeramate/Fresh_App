@@ -11,7 +11,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Faveorit")),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text("Faveorit")),
       body: Center(
         child: Text("This is Faveorit Page", style: TextStyle(fontSize: 20)),
       ),
