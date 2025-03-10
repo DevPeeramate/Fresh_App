@@ -1,13 +1,8 @@
-// นำเข้าแพ็กเกจที่จำเป็นสำหรับแอปพลิเคชัน
-import 'package:flutter/material.dart'; // ใช้สำหรับสร้าง UI ตามแนวทาง Material Design
-import 'package:fresh_app/welcome_screen.dart';
-import 'package:lottie/lottie.dart'; // ใช้สำหรับแสดงภาพเคลื่อนไหวจากไฟล์ JSON (Lottie Animations)
-import 'home_screen.dart';
-import 'loading_screen/loading_register_go_login.dart'; // นำเข้าไฟล์ที่ใช้สำหรับการเปลี่ยนไปหน้าล็อกอินหลังจากสมัครสมาชิกสำเร็จ
-import 'login.dart'; // นำเข้าไฟล์หน้าล็อกอิน
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lottie/lottie.dart';
+import 'login.dart';
 
-// ✅ สร้างคลาส RegisterScreen ซึ่งเป็น **StatefulWidget** 
-//    เนื่องจากมีการเปลี่ยนแปลงข้อมูล (State) เช่น การกรอกอีเมล, รหัสผ่าน และยืนยันรหัสผ่าน
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -15,57 +10,76 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-// ✅ คลาส _RegisterScreenState ใช้ควบคุมพฤติกรรมของหน้าสมัครสมาชิก
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _formKey = GlobalKey<FormState>(); // ใช้สำหรับระบุฟอร์ม เพื่อช่วยตรวจสอบความถูกต้องของข้อมูลที่กรอก
-  String _email = ''; // ตัวแปรสำหรับเก็บค่าอีเมลที่ผู้ใช้กรอก
-  String _password = ''; // ตัวแปรสำหรับเก็บค่ารหัสผ่านที่ผู้ใช้กรอก
-  String _confirmPassword = ''; // ตัวแปรสำหรับเก็บค่าการยืนยันรหัสผ่าน
+  final _formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
+  // ฟังก์ชันสำหรับสมัครสมาชิก
+  void registerUser() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      Navigator.pop(context); // ปิด Dialog
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registration Successful! 🎉')),
+      );
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+      String errorMessage = 'An error occurred. Please try again.';
+      if (e.code == 'email-already-in-use') {
+        errorMessage = 'This email is already registered.';
+      } else if (e.code == 'weak-password') {
+        errorMessage = 'Password is too weak. Use at least 6 characters.';
+      } else if (e.code == 'invalid-email') {
+        errorMessage = 'Invalid email format.';
+      }
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(errorMessage)));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // 🔹 สร้าง AppBar (แถบด้านบนของแอป)
       appBar: AppBar(
-        automaticallyImplyLeading: false, // ปิดปุ่มย้อนกลับอัตโนมัติ
-        backgroundColor: Color.fromARGB(255, 230, 75, 14), // กำหนดสีพื้นหลังของ AppBar (สีส้มแดง)
-        // 🔹 กำหนดชื่อหน้าสมัครสมาชิก
-        title: Text(
+        automaticallyImplyLeading: false,
+        backgroundColor: const Color.fromARGB(255, 230, 75, 14),
+        title: const Text(
           "Register here",
           style: TextStyle(
-            fontWeight: FontWeight.bold, // ตั้งค่าตัวหนา
-            fontSize: 30, // ขนาดตัวอักษรใหญ่ขึ้น
-            color: Colors.white, // ตั้งค่าสีตัวอักษรเป็นสีขาว
-          ),
+              fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
         ),
-        centerTitle: true, // จัดตำแหน่ง Title ให้อยู่ตรงกลาง
+        centerTitle: true,
       ),
-
-      // 🔹 ส่วนเนื้อหาหลักของหน้า (Body)
       body: Container(
-        color: const Color.fromARGB(255, 255, 211, 174), // กำหนดสีพื้นหลังของหน้า (สีส้มอ่อน)
-        padding: const EdgeInsets.fromLTRB(30, 30, 30, 0), // กำหนดระยะห่างภายใน
-
+        color: const Color.fromARGB(255, 255, 211, 174),
+        padding: const EdgeInsets.all(30),
         child: Center(
           child: Form(
-            key: _formKey, // กำหนด Key ให้กับ Form เพื่อใช้ตรวจสอบการกรอกข้อมูล
+            key: _formKey,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SizedBox(height: 10), // เพิ่มระยะห่างด้านบน
-
-                // 🔹 แสดงรูปภาพไอคอนล็อกอินจาก assets
-                Image.asset(
-                  'assets/Images/picture_password.png',
-                  width: 200, // ความกว้างของภาพ
-                  height: 200, // ความสูงของภาพ
-                ),
-
-                SizedBox(height: 20), // เว้นระยะห่าง
-
-                // 🔹 ช่องกรอกอีเมล
+                Image.asset('assets/Images/picture_password.png',
+                    width: 200, height: 200),
+                const SizedBox(height: 20),
                 Row(
                   children: [
-                    // แสดงไอคอนแอนิเมชัน Lottie สำหรับอีเมล
                     SizedBox(
                       width: 50,
                       height: 50,
@@ -75,27 +89,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     Expanded(
                       child: TextFormField(
-                        decoration: InputDecoration(labelText: 'Email'), // ป้ายกำกับ
+                        controller: emailController,
+                        decoration: const InputDecoration(labelText: 'Email'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your email'; // ตรวจสอบว่ากรอกอีเมลหรือยัง
+                            return 'Please enter your email';
                           }
                           return null;
-                        },
-                        onChanged: (value) {
-                          _email = value; // อัปเดตค่าอีเมลเมื่อมีการพิมพ์
                         },
                       ),
                     ),
                   ],
                 ),
-
-                SizedBox(height: 20), // เว้นระยะห่าง
-
-                // 🔹 ช่องกรอกรหัสผ่าน
+                const SizedBox(height: 20),
                 Row(
                   children: [
-                    // แสดงไอคอนแอนิเมชัน Lottie สำหรับรหัสผ่าน
                     SizedBox(
                       width: 50,
                       height: 50,
@@ -105,28 +113,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     Expanded(
                       child: TextFormField(
-                        obscureText: true, // ซ่อนรหัสผ่าน
-                        decoration: InputDecoration(labelText: 'Password'), // ป้ายกำกับ
+                        controller: passwordController,
+                        obscureText: true,
+                        decoration:
+                            const InputDecoration(labelText: 'Password'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your password'; // ตรวจสอบว่ากรอกรหัสผ่านหรือยัง
+                            return 'Please enter your password';
                           }
                           return null;
-                        },
-                        onChanged: (value) {
-                          _password = value; // อัปเดตรหัสผ่านเมื่อพิมพ์
                         },
                       ),
                     ),
                   ],
                 ),
-
-                SizedBox(height: 20), // เว้นระยะห่าง
-
-                // 🔹 ช่องกรอกยืนยันรหัสผ่าน
+                const SizedBox(height: 20),
                 Row(
                   children: [
-                    // แสดงไอคอนแอนิเมชัน Lottie สำหรับยืนยันรหัสผ่าน
                     SizedBox(
                       width: 50,
                       height: 50,
@@ -136,69 +139,60 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     Expanded(
                       child: TextFormField(
-                        obscureText: true, // ซ่อนรหัสผ่าน
-                        decoration: InputDecoration(labelText: 'Confirm Password'), // ป้ายกำกับ
+                        controller: confirmPasswordController,
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                            labelText: 'Confirm Password'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please confirm your password';
                           }
-                          if (value != _password) {
-                            return 'Passwords do not match'; // ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
+                          if (value != passwordController.text) {
+                            return 'Passwords do not match';
                           }
                           return null;
-                        },
-                        onChanged: (value) {
-                          _confirmPassword = value; // อัปเดตค่าการยืนยันรหัสผ่านเมื่อพิมพ์
                         },
                       ),
                     ),
                   ],
                 ),
-
-                SizedBox(height: 15), // เว้นระยะห่าง
-
-                // 🔹 ปุ่มสมัครสมาชิก
+                const SizedBox(height: 15),
                 SizedBox(
                   width: 350,
                   child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Registering...'))); // แสดง SnackBar เมื่อกดปุ่มและข้อมูลถูกต้อง
-                      }
-                    },
-                    child: Text('Register'),
+                    onPressed: registerUser,
+                    child: const Text('Register'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                       foregroundColor: const Color.fromARGB(255, 255, 0, 0),
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
                   ),
                 ),
-
-                SizedBox(height: 15), // เว้นระยะห่าง
-
-                // 🔹 ปุ่มกลับไปหน้าล็อกอิน
+                const SizedBox(height: 15),
                 TextButton(
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => LoadingRegisterGoLoginScreen() // ไปหน้าล็อกอิน
-                      ),
+                          builder: (context) =>
+                              const LoginScreen()), // ไปที่หน้า Login
                     );
                   },
-                  child: Text.rich(
+                  child: const Text.rich(
                     TextSpan(
                       text: "Already have an account? ",
                       style: TextStyle(fontSize: 13, color: Colors.black),
-                      children: <TextSpan>[
+                      children: [
                         TextSpan(
                           text: "Login",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.red),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: Colors.red),
                         ),
                       ],
                     ),
