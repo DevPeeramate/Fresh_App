@@ -16,6 +16,49 @@ class _CartScreenState extends State<CartScreen> {
     FirebaseFirestore.instance.collection("cart").doc(docID).delete();
   }
 
+  void checkoutCart() {
+    if (user == null) return;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm Checkout"),
+          content: const Text("Are you sure you want to place this order?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // ปิด Dialog
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                // ลบสินค้าทั้งหมดในตะกร้าของผู้ใช้
+                var cartItems = await FirebaseFirestore.instance
+                    .collection("cart")
+                    .where("userID", isEqualTo: user!.uid)
+                    .get();
+
+                for (var item in cartItems.docs) {
+                  item.reference.delete();
+                }
+
+                Navigator.of(context).pop(); // ปิด Dialog
+
+                // แจ้งเตือนว่าการ Checkout สำเร็จ
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Order placed successfully!")),
+                );
+              },
+              child: const Text("Confirm"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,30 +76,63 @@ class _CartScreenState extends State<CartScreen> {
           var cartItems = snapshot.data!.docs;
 
           if (cartItems.isEmpty) {
-            return const Center(child: Text("Your cart is empty"));
+            return const Center(child: Text("Your cart is empty", style: TextStyle(fontSize: 18)));
           }
 
-          return ListView.builder(
-            itemCount: cartItems.length,
-            itemBuilder: (context, index) {
-              var cartItem = cartItems[index].data() as Map<String, dynamic>;
-              String docID = cartItems[index].id;
+          double total = 0;
+          for (var item in cartItems) {
+            var product = item.data() as Map<String, dynamic>;
+            double price = (product["price"] is String) 
+                ? double.tryParse(product["price"]) ?? 0 
+                : product["price"].toDouble();
+            int quantity = product["quantity"] ?? 1;
+            total += price * quantity;
+          }
 
-              return Card(
-                margin: const EdgeInsets.all(10),
-                child: ListTile(
-                  leading: Image.network(cartItem["image"], width: 50, height: 50),
-                  title: Text(cartItem["name"]),
-                  subtitle: Text("Price: ${cartItem["price"]} THB"),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () {
-                      removeItem(docID);
-                    },
-                  ),
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: cartItems.length,
+                  itemBuilder: (context, index) {
+                    var cartItem = cartItems[index].data() as Map<String, dynamic>;
+                    String docID = cartItems[index].id;
+
+                    return Card(
+                      margin: const EdgeInsets.all(10),
+                      child: ListTile(
+                        leading: Image.network(cartItem["image"], width: 50, height: 50),
+                        title: Text(cartItem["name"]),
+                        subtitle: Text("Price: \$${cartItem["price"]}"),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            removeItem(docID);
+                          },
+                        ),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text("Total: \$${total.toStringAsFixed(2)}", style: const TextStyle(fontSize: 18)),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: checkoutCart,
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                        child: const Text("Checkout", style: TextStyle(color: Colors.white, fontSize: 16)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           );
         },
       ),

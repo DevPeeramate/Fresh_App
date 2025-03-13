@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'product_detail_screen.dart';
 
 class ProductListScreen extends StatelessWidget {
   final String category;
@@ -46,20 +47,24 @@ class ProductListScreen extends StatelessWidget {
           return ListView.builder(
             itemCount: products.length,
             itemBuilder: (context, index) {
-              var product = products[index].data() as Map<String, dynamic>;
+              var product = products[index].data();
 
               return Card(
                 margin: const EdgeInsets.all(10),
                 child: ListTile(
-                  leading: Image.network(product["image"], width: 50, height: 50),
+                  leading:
+                      Image.network(product["image"], width: 50, height: 50),
                   title: Text(product["name"]),
                   subtitle: Text("Price: ${product["price"]} THB"),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.add_circle, color: Colors.green),
-                    onPressed: () {
-                      addToCart(context, product);
-                    },
-                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ProductDetailScreen(product: product),
+                      ),
+                    );
+                  },
                 ),
               );
             },

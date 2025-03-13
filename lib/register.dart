@@ -1,8 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lottie/lottie.dart';
-import 'login.dart';
+// นำเข้าแพ็กเกจที่จำเป็นสำหรับแอปพลิเคชัน
+import 'package:flutter/material.dart'; // ใช้สำหรับสร้าง UI ตามแนวทาง Material Design
+import 'package:lottie/lottie.dart'; // ใช้สำหรับแสดงภาพเคลื่อนไหวจากไฟล์ JSON (Lottie Animations)
+import 'loading_screen/loading_register_go_login.dart'; // นำเข้าไฟล์ที่ใช้สำหรับการเปลี่ยนไปหน้าล็อกอินหลังจากสมัครสมาชิกสำเร็จ
 
+
+// ✅ สร้างคลาส RegisterScreen ซึ่งเป็น **StatefulWidget**
+//    เนื่องจากมีการเปลี่ยนแปลงข้อมูล (State) เช่น การกรอกอีเมล, รหัสผ่าน และยืนยันรหัสผ่าน
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -10,76 +13,56 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
+// ✅ คลาส _RegisterScreenState ใช้ควบคุมพฤติกรรมของหน้าสมัครสมาชิก
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-
-  // ฟังก์ชันสำหรับสมัครสมาชิก
-  void registerUser() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return const Center(child: CircularProgressIndicator());
-      },
-    );
-
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-
-      Navigator.pop(context); // ปิด Dialog
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registration Successful! 🎉')),
-      );
-    } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
-      String errorMessage = 'An error occurred. Please try again.';
-      if (e.code == 'email-already-in-use') {
-        errorMessage = 'This email is already registered.';
-      } else if (e.code == 'weak-password') {
-        errorMessage = 'Password is too weak. Use at least 6 characters.';
-      } else if (e.code == 'invalid-email') {
-        errorMessage = 'Invalid email format.';
-      }
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(errorMessage)));
-    }
-  }
+  final _formKey = GlobalKey<FormState>(); // ใช้สำหรับระบุฟอร์ม เพื่อช่วยตรวจสอบความถูกต้องของข้อมูลที่กรอก
+  String _email = ''; // ตัวแปรสำหรับเก็บค่าอีเมลที่ผู้ใช้กรอก
+  String _password = ''; // ตัวแปรสำหรับเก็บค่ารหัสผ่านที่ผู้ใช้กรอก
+  String _confirmPassword = ''; // ตัวแปรสำหรับเก็บค่าการยืนยันรหัสผ่าน
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // 🔹 สร้าง AppBar (แถบด้านบนของแอป)
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: const Color.fromARGB(255, 230, 75, 14),
-        title: const Text(
+        automaticallyImplyLeading: false, // ปิดปุ่มย้อนกลับอัตโนมัติ
+        backgroundColor: Color.fromARGB(255, 230, 75, 14), // กำหนดสีพื้นหลังของ AppBar (สีส้มแดง)
+        // 🔹 กำหนดชื่อหน้าสมัครสมาชิก
+        title: Text(
           "Register here",
           style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
+            fontWeight: FontWeight.bold, // ตั้งค่าตัวหนา
+            fontSize: 30, // ขนาดตัวอักษรใหญ่ขึ้น
+            color: Colors.white, // ตั้งค่าสีตัวอักษรเป็นสีขาว
+          ),
         ),
-        centerTitle: true,
+        centerTitle: true, // จัดตำแหน่ง Title ให้อยู่ตรงกลาง
       ),
+
+      // 🔹 ส่วนเนื้อหาหลักของหน้า (Body)
       body: Container(
-        color: const Color.fromARGB(255, 255, 211, 174),
-        padding: const EdgeInsets.all(30),
+        color: const Color.fromARGB(255, 255, 211, 174), // กำหนดสีพื้นหลังของหน้า (สีส้มอ่อน)
+        padding: const EdgeInsets.fromLTRB(30, 30, 30, 0), // กำหนดระยะห่างภายใน
         child: Center(
           child: Form(
-            key: _formKey,
+            key: _formKey, // กำหนด Key ให้กับ Form เพื่อใช้ตรวจสอบการกรอกข้อมูล
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Image.asset('assets/Images/picture_password.png',
-                    width: 200, height: 200),
-                const SizedBox(height: 20),
+                SizedBox(height: 10), // เพิ่มระยะห่างด้านบน
+
+                // 🔹 แสดงรูปภาพไอคอนล็อกอินจาก assets
+                Image.asset(
+                  'assets/Images/picture_password.png', // โหลดรูปภาพจาก assets
+                  width: 200, // ความกว้างของภาพ
+                  height: 200, // ความสูงของภาพ
+                ),
+
+                SizedBox(height: 20), // เว้นระยะห่าง
+
+                // 🔹 ช่องกรอกอีเมล
                 Row(
                   children: [
+                    // แสดงไอคอนแอนิเมชัน Lottie สำหรับอีเมล
                     SizedBox(
                       width: 50,
                       height: 50,
@@ -89,21 +72,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     Expanded(
                       child: TextFormField(
-                        controller: emailController,
-                        decoration: const InputDecoration(labelText: 'Email'),
+                        decoration: InputDecoration(labelText: 'Email'), // ป้ายกำกับ
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
+                            return 'Please enter your email'; // ตรวจสอบว่ากรอกอีเมลหรือยัง
                           }
                           return null;
+                        },
+                        onChanged: (value) {
+                          _email = value; // อัปเดตค่าอีเมลเมื่อมีการพิมพ์
                         },
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+
+                SizedBox(height: 20), // เว้นระยะห่าง
+
+                // 🔹 ช่องกรอกรหัสผ่าน
                 Row(
                   children: [
+                    // แสดงไอคอนแอนิเมชัน Lottie สำหรับรหัสผ่าน
                     SizedBox(
                       width: 50,
                       height: 50,
@@ -113,23 +102,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     Expanded(
                       child: TextFormField(
-                        controller: passwordController,
-                        obscureText: true,
-                        decoration:
-                            const InputDecoration(labelText: 'Password'),
+                        obscureText: true, // ซ่อนรหัสผ่าน
+                        decoration: InputDecoration(labelText: 'Password'), // ป้ายกำกับ
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
+                            return 'Please enter your password'; // ตรวจสอบว่ากรอกรหัสผ่านหรือยัง
                           }
                           return null;
+                        },
+                        onChanged: (value) {
+                          _password = value; // อัปเดตรหัสผ่านเมื่อพิมพ์
                         },
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+
+                SizedBox(height: 20), // เว้นระยะห่าง
+
+                // 🔹 ช่องกรอกยืนยันรหัสผ่าน
                 Row(
                   children: [
+                    // แสดงไอคอนแอนิเมชัน Lottie สำหรับยืนยันรหัสผ่าน
                     SizedBox(
                       width: 50,
                       height: 50,
@@ -139,60 +133,105 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     Expanded(
                       child: TextFormField(
-                        controller: confirmPasswordController,
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                            labelText: 'Confirm Password'),
+                        obscureText: true, // ซ่อนรหัสผ่าน
+                        decoration: InputDecoration(labelText: 'Confirm Password'), // ป้ายกำกับ
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please confirm your password';
                           }
-                          if (value != passwordController.text) {
-                            return 'Passwords do not match';
+                          if (value != _password) {
+                            return 'Passwords do not match'; // ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
                           }
                           return null;
+                        },
+                        onChanged: (value) {
+                          _confirmPassword = value; // อัปเดตค่าการยืนยันรหัสผ่านเมื่อพิมพ์
                         },
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 15),
+
+                SizedBox(height: 15), // เว้นระยะห่าง
+
+                // 🔹 ปุ่มสมัครสมาชิก
                 SizedBox(
-                  width: 350,
+                  width: 100, //350
                   child: ElevatedButton(
-                    onPressed: registerUser,
-                    child: const Text('Register'),
+                    onPressed: () {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Registering...'))); // แสดง SnackBar เมื่อกดปุ่มและข้อมูลถูกต้อง
+                      }
+                    },
+                    child: Text('Register'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                       foregroundColor: const Color.fromARGB(255, 255, 0, 0),
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      padding: EdgeInsets.symmetric(vertical: 10),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 15),
+
+                SizedBox(height: 15), // เว้นระยะห่าง
+
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    // onPressed: signInWithGoogle,
+                    icon: const Icon(Icons.login, size: 20),
+                    // icon: Image.asset("assets/icons/icon_google.png", height: 20, width: 20),
+                    label: const Text("Sign Up with Google"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ), onPressed: () {  },
+                  ),
+                ),
+
+                SizedBox(height: 5),
+
+                // ปุ่มเข้าสู่ระบบด้วย Facebook
+                SizedBox(
+                  width: 350,
+                  child: ElevatedButton.icon(
+                    onPressed: () {}, // สามารถเพิ่มฟังก์ชันได้
+                    icon: Icon(Icons.facebook, size: 22),
+                    label: Text("Sign Up with Facebook"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // 🔹 ปุ่มกลับไปหน้าล็อกอิน
                 TextButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              const LoginScreen()), // ไปที่หน้า Login
+                        builder: (context) => LoadingRegisterGoLoginScreen() // ไปหน้าล็อกอิน
+                      ),
                     );
                   },
-                  child: const Text.rich(
+                  child: Text.rich(
                     TextSpan(
                       text: "Already have an account? ",
                       style: TextStyle(fontSize: 13, color: Colors.black),
-                      children: [
+                      children: <TextSpan>[
                         TextSpan(
                           text: "Login",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: Colors.red),
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.red),
                         ),
                       ],
                     ),
