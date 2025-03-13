@@ -81,7 +81,7 @@ class _CartScreenState extends State<CartScreen> {
 
           double total = 0;
           for (var item in cartItems) {
-            var product = item.data() as Map<String, dynamic>;
+            var product = item.data();
             double price = (product["price"] is String) 
                 ? double.tryParse(product["price"]) ?? 0 
                 : product["price"].toDouble();
@@ -95,7 +95,7 @@ class _CartScreenState extends State<CartScreen> {
                 child: ListView.builder(
                   itemCount: cartItems.length,
                   itemBuilder: (context, index) {
-                    var cartItem = cartItems[index].data() as Map<String, dynamic>;
+                    var cartItem = cartItems[index].data();
                     String docID = cartItems[index].id;
 
                     return Card(
