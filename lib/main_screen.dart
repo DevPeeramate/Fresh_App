@@ -43,19 +43,30 @@ class _MainScreenState extends State<MainScreen> {
           onTap: _onItemTapped,
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.store), label: "Shop"),
-            BottomNavigationBarItem(icon: Icon(Icons.explore), label: "Explore"),
-            BottomNavigationBarItem(icon: Icon(Icons.favorite), label: "Favorite"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.explore), label: "Explore"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.favorite), label: "Favorite"),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: "Account"),
           ],
         ),
 
+        // 📌 แสดงจำนวนสินค้าทั้งหมดในไอคอนตะกร้า
         floatingActionButton: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection("cart")
-              .where("userID", isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+              .where("userID",
+                  isEqualTo: FirebaseAuth.instance.currentUser?.uid)
               .snapshots(),
           builder: (context, snapshot) {
-            int itemCount = snapshot.hasData ? snapshot.data!.docs.length : 0;
+            int totalItems = 0;
+            if (snapshot.hasData) {
+              for (var doc in snapshot.data!.docs) {
+                var item = doc.data() as Map<String, dynamic>;
+                totalItems += int.tryParse(item["quantity"].toString()) ?? 1;
+              }
+            }
+
             return Stack(
               alignment: Alignment.center,
               children: [
@@ -64,13 +75,14 @@ class _MainScreenState extends State<MainScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const CartScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const CartScreen()),
                     );
                   },
-                  child: const Icon(Icons.shopping_cart, size: 28, color: Colors.white),
+                  child: const Icon(Icons.shopping_cart,
+                      size: 28, color: Colors.white),
                 ),
-
-                if (itemCount > 0)
+                if (totalItems > 0)
                   Positioned(
                     right: 0,
                     top: 0,
@@ -85,7 +97,7 @@ class _MainScreenState extends State<MainScreen> {
                         minHeight: 20,
                       ),
                       child: Text(
-                        itemCount.toString(),
+                        totalItems.toString(),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,
