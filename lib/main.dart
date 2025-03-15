@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-// import 'welcome_screen.dart'; // ให้เริ่มที่หน้า WelcomeScreen
-import 'main_screen.dart';
+import 'welcome_screen.dart'; // ให้เริ่มที่หน้า WelcomeScreen
+// import 'main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MainScreen(),
+      home: WelcomeScreen(),
       // MainScreen(),
       // WelcomeScreen(), // ให้เริ่มที่ WelcomeScreen
     );

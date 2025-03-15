@@ -12,9 +12,8 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final user = FirebaseAuth.instance.currentUser;
-  int quantity = 1; // จำนวนสินค้าที่เพิ่มลงตะกร้า
+  int quantity = 1;
   bool isFavorite = false;
-  String? favoriteDocID;
 
   @override
   void initState() {
@@ -22,40 +21,33 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     checkIfFavorite();
   }
 
-  // ตรวจสอบว่าสินค้าอยู่ใน Favorites หรือไม่
   void checkIfFavorite() async {
     if (user == null) return;
 
-    var snapshot = await FirebaseFirestore.instance
+    var favSnapshot = await FirebaseFirestore.instance
         .collection("favorites")
         .where("userID", isEqualTo: user!.uid)
         .where("name", isEqualTo: widget.product["name"])
         .get();
 
-    if (snapshot.docs.isNotEmpty) {
-      setState(() {
-        isFavorite = true;
-        favoriteDocID = snapshot.docs.first.id;
-      });
-    }
+    setState(() {
+      isFavorite = favSnapshot.docs.isNotEmpty;
+    });
   }
 
-  // เพิ่ม / ลบสินค้าใน Favorites
   void toggleFavorite() {
-    if (user == null) {
-      print("User not logged in");
-      return;
-    }
+    if (user == null) return;
 
     if (isFavorite) {
-      FirebaseFirestore.instance.collection("favorites").doc(favoriteDocID).delete().then((_) {
-        setState(() {
-          isFavorite = false;
-          favoriteDocID = null;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("${widget.product['name']} removed from favorites!")),
-        );
+      FirebaseFirestore.instance
+          .collection("favorites")
+          .where("userID", isEqualTo: user!.uid)
+          .where("name", isEqualTo: widget.product["name"])
+          .get()
+          .then((snapshot) {
+        for (var doc in snapshot.docs) {
+          doc.reference.delete();
+        }
       });
     } else {
       FirebaseFirestore.instance.collection("favorites").add({
@@ -63,39 +55,31 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         "name": widget.product["name"],
         "price": widget.product["price"],
         "image": widget.product["image"],
+        "detail": widget.product["detail"], // อ่าน detail
         "timestamp": FieldValue.serverTimestamp(),
-      }).then((docRef) {
-        setState(() {
-          isFavorite = true;
-          favoriteDocID = docRef.id;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("${widget.product['name']} added to favorites!")),
-        );
       });
     }
+
+    setState(() {
+      isFavorite = !isFavorite;
+    });
   }
 
-  // เพิ่มสินค้าในตะกร้า
   void addToCart() {
-    if (user == null) {
-      print("User not logged in");
-      return;
-    }
+    if (user == null) return;
 
     FirebaseFirestore.instance.collection("cart").add({
       "userID": user!.uid,
       "name": widget.product["name"],
       "price": widget.product["price"],
       "image": widget.product["image"],
+      "detail": widget.product["detail"], // อ่าน detail
       "quantity": quantity,
       "timestamp": FieldValue.serverTimestamp(),
     }).then((_) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("${widget.product['name']} added to cart!")),
       );
-    }).catchError((error) {
-      print("Failed to add to cart: $error");
     });
   }
 
@@ -117,16 +101,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               children: [
                 Text(widget.product["name"], style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                 IconButton(
-                  icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border, color: Colors.red),
-                  onPressed: toggleFavorite, // กดแล้วเพิ่มหรือลบออกจาก Favorite
+                  icon: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: isFavorite ? Colors.red : Colors.grey,
+                  ),
+                  onPressed: toggleFavorite,
                 ),
               ],
             ),
-            Text("\$${widget.product["price"]} / unit", style: const TextStyle(fontSize: 18, color: Colors.orange)),
+            Text("\$${widget.product["price"]}", style: const TextStyle(fontSize: 18, color: Colors.orange)),
             const SizedBox(height: 10),
-            const Text(
-              "Golden ripe fruits delivered to your house in the most hygienic way...",
-              style: TextStyle(fontSize: 14, color: Colors.grey),
+            Text(
+              widget.product["detail"] ?? "No detail available", // อ่านค่ารายละเอียด
+              style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
             const SizedBox(height: 20),
             Row(

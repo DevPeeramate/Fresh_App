@@ -18,6 +18,7 @@ class ExploreScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(
           "Categories",
           style: TextStyle(color: Colors.orange, fontSize: 22, fontWeight: FontWeight.bold),

@@ -55,7 +55,7 @@ class ProductListScreen extends StatelessWidget {
                   leading:
                       Image.network(product["image"], width: 50, height: 50),
                   title: Text(product["name"]),
-                  subtitle: Text("Price: ${product["price"]} THB"),
+                  subtitle: Text("Price: ${product["price"]}"),
                   onTap: () {
                     Navigator.push(
                       context,

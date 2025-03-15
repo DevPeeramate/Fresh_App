@@ -197,8 +197,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: signInWithGoogle,
-                    icon: const Icon(Icons.login, size: 20),
-                    // icon: Image.asset("assets/icons/icon_google.png", height: 20, width: 20),
+                    icon: Image.asset("assets/Icons/icon_google.png", height: 20, width: 20),
+                    // icon: Image.asset("assets/Icons/icon_google.png", height: 20, width: 20),
                     label: const Text("Sign in with Google"),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -217,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: 350,
                   child: ElevatedButton.icon(
                     onPressed: () {}, // สามารถเพิ่มฟังก์ชันได้
-                    icon: Icon(Icons.facebook, size: 22),
+                    icon: Image.asset("assets/Icons/icon_facebook.png", height: 20, width: 20),
                     label: Text("Sign in with Facebook"),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,

@@ -16,6 +16,16 @@ class _CartScreenState extends State<CartScreen> {
     FirebaseFirestore.instance.collection("cart").doc(docID).delete();
   }
 
+  void updateQuantity(String docID, int newQuantity) {
+    if (newQuantity <= 0) {
+      removeItem(docID); // ถ้าจำนวนลดลงเหลือ 0 ให้ลบสินค้าออก
+    } else {
+      FirebaseFirestore.instance.collection("cart").doc(docID).update({
+        "quantity": newQuantity,
+      });
+    }
+  }
+
   void checkoutCart() {
     if (user == null) return;
 
@@ -62,7 +72,7 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Your Cart")),
+      appBar: AppBar(title: const Text("Your Cart",style: TextStyle(color: Colors.orange, fontSize: 22, fontWeight: FontWeight.bold),)),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("cart")
@@ -98,17 +108,42 @@ class _CartScreenState extends State<CartScreen> {
                     var cartItem = cartItems[index].data();
                     String docID = cartItems[index].id;
 
-                    return Card(
-                      margin: const EdgeInsets.all(10),
-                      child: ListTile(
-                        leading: Image.network(cartItem["image"], width: 50, height: 50),
-                        title: Text(cartItem["name"]),
-                        subtitle: Text("Price: \$${cartItem["price"]}"),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () {
-                            removeItem(docID);
-                          },
+                    return Dismissible(
+                      key: Key(docID),
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        color: Colors.red,
+                        child: const Icon(Icons.delete, color: Colors.white),
+                      ),
+                      onDismissed: (direction) {
+                        removeItem(docID);
+                      },
+                      child: Card(
+                        margin: const EdgeInsets.all(10),
+                        child: ListTile(
+                          leading: Image.network(cartItem["image"], width: 50, height: 50),
+                          title: Text(cartItem["name"]),
+                          subtitle: Text("Price: \$${cartItem["price"]}"),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.remove_circle, color: Colors.red),
+                                onPressed: () {
+                                  updateQuantity(docID, cartItem["quantity"] - 1);
+                                },
+                              ),
+                              Text(cartItem["quantity"].toString(), style: const TextStyle(fontSize: 18)),
+                              IconButton(
+                                icon: const Icon(Icons.add_circle, color: Colors.green),
+                                onPressed: () {
+                                  updateQuantity(docID, cartItem["quantity"] + 1);
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );

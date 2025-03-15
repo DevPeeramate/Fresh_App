@@ -22,7 +22,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       // 🔹 สร้าง AppBar (แถบด้านบนของแอป)
       appBar: AppBar(
         automaticallyImplyLeading: false, // ปิดปุ่มย้อนกลับอัตโนมัติ
@@ -182,8 +184,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     // onPressed: signInWithGoogle,
-                    icon: const Icon(Icons.login, size: 20),
-                    // icon: Image.asset("assets/icons/icon_google.png", height: 20, width: 20),
+                    
+                    icon: Image.asset("assets/Icons/icon_google.png", height: 20, width: 20),
                     label: const Text("Sign Up with Google"),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -191,7 +193,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                    ), onPressed: () {  },
+                    ), onPressed: () {  
+                      
+                    },
                   ),
                 ),
 
@@ -202,7 +206,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   width: 350,
                   child: ElevatedButton.icon(
                     onPressed: () {}, // สามารถเพิ่มฟังก์ชันได้
-                    icon: Icon(Icons.facebook, size: 22),
+                    icon: Image.asset("assets/Icons/icon_facebook.png", height: 20, width: 20),
                     label: Text("Sign Up with Facebook"),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
