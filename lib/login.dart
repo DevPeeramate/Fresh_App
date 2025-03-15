@@ -42,14 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
-      String errorMessage = 'An error occurred. Please try again.';
-      if (e.code == 'user-not-found') {
-        errorMessage = 'No user found for that email.';
-      } else if (e.code == 'wrong-password') {
-        errorMessage = 'Incorrect password. Please try again.';
-      } else if (e.code == 'network-request-failed') {
-        errorMessage = 'No internet connection. Please check your network.';
-      }
+      String errorMessage = 'invalid email or password';
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(errorMessage)));
     }

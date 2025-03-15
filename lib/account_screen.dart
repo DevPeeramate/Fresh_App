@@ -76,7 +76,7 @@ class _AccountScreenState extends State<AccountScreen> {
           const SizedBox(height: 15),
           Center(
             child: Text(
-              'Logged in as: ${user?.email ?? 'No email available'}',
+              '${user?.email ?? 'No email available'}',
               style: const TextStyle(fontSize: 16),
             ),
           ),
