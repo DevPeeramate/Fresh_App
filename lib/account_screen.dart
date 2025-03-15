@@ -59,17 +59,19 @@ class _AccountScreenState extends State<AccountScreen> {
         automaticallyImplyLeading: false,
         title: const Text(
           "Account",
-          style: TextStyle(color: Colors.orange, fontSize: 22, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Colors.orange, fontSize: 22, fontWeight: FontWeight.bold),
         ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircleAvatar(
-            radius: 50, 
+            radius: 50,
             backgroundImage: profileImage.isNotEmpty
                 ? NetworkImage(profileImage)
-                : const AssetImage('assets/Images/default_profile.png') as ImageProvider,
+                : const AssetImage('assets/Images/default_profile.png')
+                    as ImageProvider,
           ),
           const SizedBox(height: 15),
           Center(

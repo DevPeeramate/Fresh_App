@@ -85,14 +85,14 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, 
+        automaticallyImplyLeading: false,
         backgroundColor: const Color.fromARGB(255, 230, 75, 14),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back), 
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const WelcomeScreen()), 
+              MaterialPageRoute(builder: (context) => const WelcomeScreen()),
             );
           },
         ),
@@ -117,15 +117,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         children: <Widget>[
                           const SizedBox(height: 10),
-
                           Image.asset(
                             'assets/Images/picture_password.png',
                             width: 200,
                             height: 200,
                           ),
-
                           const SizedBox(height: 20),
-
                           Row(
                             children: [
                               SizedBox(
@@ -138,16 +135,16 @@ class _LoginScreenState extends State<LoginScreen> {
                               Expanded(
                                 child: TextFormField(
                                   controller: emailController,
-                                  decoration: const InputDecoration(labelText: 'Email'),
-                                  validator: (value) =>
-                                      value!.isEmpty ? 'Please enter your email' : null,
+                                  decoration:
+                                      const InputDecoration(labelText: 'Email'),
+                                  validator: (value) => value!.isEmpty
+                                      ? 'Please enter your email'
+                                      : null,
                                 ),
                               ),
                             ],
                           ),
-
                           const SizedBox(height: 20),
-
                           Row(
                             children: [
                               SizedBox(
@@ -161,41 +158,40 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: TextFormField(
                                   controller: passwordController,
                                   obscureText: true,
-                                  decoration:
-                                      const InputDecoration(labelText: 'Password'),
-                                  validator: (value) =>
-                                      value!.isEmpty ? 'Please enter your password' : null,
+                                  decoration: const InputDecoration(
+                                      labelText: 'Password'),
+                                  validator: (value) => value!.isEmpty
+                                      ? 'Please enter your password'
+                                      : null,
                                 ),
                               ),
                             ],
                           ),
-
                           const SizedBox(height: 25),
-
-
                           SizedBox(
                             width: 250,
                             child: ElevatedButton(
                               onPressed: signUserIn,
-                              child: const Text('Login', style: TextStyle(fontSize: 16)),
+                              child: const Text('Login',
+                                  style: TextStyle(fontSize: 16)),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.orange,
                                 foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 15),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                               ),
                             ),
                           ),
-
                           const SizedBox(height: 15),
-
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton.icon(
                               onPressed: signInWithGoogle,
-                              icon: Image.asset("assets/Icons/icon_google.png", height: 20, width: 20),
+                              icon: Image.asset("assets/Icons/icon_google.png",
+                                  height: 20, width: 20),
                               label: const Text("Sign in with Google"),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
@@ -206,14 +202,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           ),
-
                           const SizedBox(height: 5),
-
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton.icon(
-                              onPressed: () {}, 
-                              icon: Image.asset("assets/Icons/icon_facebook.png", height: 20, width: 20),
+                              onPressed: () {},
+                              icon: Image.asset(
+                                  "assets/Icons/icon_facebook.png",
+                                  height: 20,
+                                  width: 20),
                               label: const Text("Sign in with Facebook"),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
@@ -224,22 +221,22 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           ),
-
                           const SizedBox(height: 10),
-
                           TextButton(
                             onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const LoadingLoginGoRegisterScreen(),
+                                  builder: (context) =>
+                                      const LoadingLoginGoRegisterScreen(),
                                 ),
                               );
                             },
                             child: const Text.rich(
                               TextSpan(
                                 text: "Don't have an account? ",
-                                style: TextStyle(fontSize: 13, color: Colors.black),
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.black),
                                 children: [
                                   TextSpan(
                                     text: "Sign Up",

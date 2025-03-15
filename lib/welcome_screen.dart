@@ -24,9 +24,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/Images/welcome_logo.png', height: 275), 
-            const SizedBox(height: 20), 
-
+            Image.asset('assets/Images/welcome_logo.png', height: 275),
+            const SizedBox(height: 20),
             Text(
               "Relax and shop",
               style: TextStyle(
@@ -35,9 +34,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 color: Colors.orange,
               ),
             ),
-
             const SizedBox(height: 10),
-
             Text(
               "Shop online and get groceries\n delivered from stores to your home",
               textAlign: TextAlign.center,
@@ -46,22 +43,22 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 color: Colors.black87,
               ),
             ),
-
             const SizedBox(height: 30),
-
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoadingWelcomeGoRegisterScreen()), 
+                  MaterialPageRoute(
+                      builder: (context) => LoadingWelcomeGoRegisterScreen()),
                 );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30), 
+                  borderRadius: BorderRadius.circular(30),
                 ),
               ),
               child: const Text(
@@ -69,20 +66,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
-
             const SizedBox(height: 20),
-
             OutlinedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoadingWelcomeGoLoginScreen()), 
+                  MaterialPageRoute(
+                      builder: (context) => LoadingWelcomeGoLoginScreen()),
                 );
               },
               style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Colors.orange, width: 2), 
+                side: const BorderSide(color: Colors.orange, width: 2),
                 foregroundColor: Colors.orange,
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),

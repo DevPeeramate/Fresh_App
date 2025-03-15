@@ -28,6 +28,23 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  Stream<int> getCartItemCount() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return Stream.value(0);
+
+    return FirebaseFirestore.instance
+        .collection("cart")
+        .where("userID", isEqualTo: user.uid)
+        .snapshots()
+        .map((snapshot) {
+      int count = 0;
+      for (var doc in snapshot.docs) {
+        count += (doc["quantity"] as int?) ?? 1;
+      }
+      return count;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -52,21 +69,10 @@ class _MainScreenState extends State<MainScreen> {
         ),
 
         // 📌 แสดงจำนวนสินค้าทั้งหมดในไอคอนตะกร้า
-        floatingActionButton: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection("cart")
-              .where("userID",
-                  isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-              .snapshots(),
+        floatingActionButton: StreamBuilder<int>(
+          stream: getCartItemCount(),
           builder: (context, snapshot) {
-            int totalItems = 0;
-            if (snapshot.hasData) {
-              for (var doc in snapshot.data!.docs) {
-                var item = doc.data() as Map<String, dynamic>;
-                totalItems += int.tryParse(item["quantity"].toString()) ?? 1;
-              }
-            }
-
+            int itemCount = snapshot.data ?? 0;
             return Stack(
               alignment: Alignment.center,
               children: [
@@ -82,7 +88,7 @@ class _MainScreenState extends State<MainScreen> {
                   child: const Icon(Icons.shopping_cart,
                       size: 28, color: Colors.white),
                 ),
-                if (totalItems > 0)
+                if (itemCount > 0)
                   Positioned(
                     right: 0,
                     top: 0,
@@ -97,7 +103,7 @@ class _MainScreenState extends State<MainScreen> {
                         minHeight: 20,
                       ),
                       child: Text(
-                        totalItems.toString(),
+                        itemCount.toString(),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,

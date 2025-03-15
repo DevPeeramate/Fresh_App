@@ -15,21 +15,20 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-
-Future<void> registerWithEmailPassword(BuildContext context, String email, String password) async {
+Future<void> registerWithEmailPassword(
+    BuildContext context, String email, String password) async {
   try {
-    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    UserCredential userCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
     print("Registration Successful: ${userCredential.user!.email}");
 
-    // แสดงข้อความแจ้งเตือน
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("Registration Successful")),
     );
 
-    // หลังจากสมัครเสร็จ ให้ไปหน้าล็อกอิน
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => LoadingRegisterGoLoginScreen()),
@@ -42,20 +41,18 @@ Future<void> registerWithEmailPassword(BuildContext context, String email, Strin
     } else if (e.code == 'email-already-in-use') {
       errorMessage = "The account already exists for that email.";
     }
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(errorMessage)),
     );
   }
 }
 
-
-// ✅ คลาส _RegisterScreenState ใช้ควบคุมพฤติกรรมของหน้าสมัครสมาชิก
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _formKey = GlobalKey<FormState>(); // ใช้สำหรับระบุฟอร์ม เพื่อช่วยตรวจสอบความถูกต้องของข้อมูลที่กรอก
-  String _email = ''; // ตัวแปรสำหรับเก็บค่าอีเมลที่ผู้ใช้กรอก
-  String _password = ''; // ตัวแปรสำหรับเก็บค่ารหัสผ่านที่ผู้ใช้กรอก
-  String _confirmPassword = ''; // ตัวแปรสำหรับเก็บค่าการยืนยันรหัสผ่าน
+  final _formKey = GlobalKey<FormState>();
+  String _email = '';
+  String _password = '';
+  String _confirmPassword = '';
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -125,49 +122,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // 🔹 สร้าง AppBar (แถบด้านบนของแอป)
       appBar: AppBar(
-        automaticallyImplyLeading: false, // ปิดปุ่มย้อนกลับอัตโนมัติ
-        backgroundColor: Color.fromARGB(255, 230, 75, 14), // กำหนดสีพื้นหลังของ AppBar (สีส้มแดง)
-        // 🔹 กำหนดชื่อหน้าสมัครสมาชิก
+        automaticallyImplyLeading: false,
+        backgroundColor: Color.fromARGB(255, 230, 75, 14),
         title: Text(
           "Register here",
           style: TextStyle(
-            fontWeight: FontWeight.bold, // ตั้งค่าตัวหนา
-            fontSize: 30, // ขนาดตัวอักษรใหญ่ขึ้น
-            color: Colors.white, // ตั้งค่าสีตัวอักษรเป็นสีขาว
+            fontWeight: FontWeight.bold,
+            fontSize: 30,
+            color: Colors.white,
           ),
         ),
-        centerTitle: true, // จัดตำแหน่ง Title ให้อยู่ตรงกลาง
+        centerTitle: true,
       ),
-
-      // 🔹 ส่วนเนื้อหาหลักของหน้า (Body)
       body: SingleChildScrollView(
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          color: const Color.fromARGB(255, 255, 211, 174), // กำหนดสีพื้นหลังของหน้า (สีส้มอ่อน)
-          padding: const EdgeInsets.fromLTRB(30, 30, 30, 0), // กำหนดระยะห่างภายใน
+          color: const Color.fromARGB(255, 255, 211, 174),
+          padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
           child: Center(
             child: Form(
-              key: _formKey, // กำหนด Key ให้กับ Form เพื่อใช้ตรวจสอบการกรอกข้อมูล
+              key: _formKey,
               child: Column(
                 children: <Widget>[
-                  SizedBox(height: 10), // เพิ่มระยะห่างด้านบน
-        
-                  // 🔹 แสดงรูปภาพไอคอนล็อกอินจาก assets
+                  SizedBox(height: 10),
                   Image.asset(
-                    'assets/Images/picture_password.png', // โหลดรูปภาพจาก assets
-                    width: 200, // ความกว้างของภาพ
-                    height: 200, // ความสูงของภาพ
+                    'assets/Images/picture_password.png',
+                    width: 200,
+                    height: 200,
                   ),
-        
-                  SizedBox(height: 20), // เว้นระยะห่าง
-        
-                  // 🔹 ช่องกรอกอีเมล
+                  SizedBox(height: 20),
                   Row(
                     children: [
-                      // แสดงไอคอนแอนิเมชัน Lottie สำหรับอีเมล
                       SizedBox(
                         width: 50,
                         height: 50,
@@ -177,27 +164,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       Expanded(
                         child: TextFormField(
-                          decoration: InputDecoration(labelText: 'Email'), // ป้ายกำกับ
+                          decoration: InputDecoration(labelText: 'Email'),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your email'; // ตรวจสอบว่ากรอกอีเมลหรือยัง
+                              return 'Please enter your email';
                             }
                             return null;
                           },
                           onChanged: (value) {
-                            _email = value; // อัปเดตค่าอีเมลเมื่อมีการพิมพ์
+                            _email = value;
                           },
                         ),
                       ),
                     ],
                   ),
-        
-                  SizedBox(height: 20), // เว้นระยะห่าง
-        
-                  // 🔹 ช่องกรอกรหัสผ่าน
+                  SizedBox(height: 20),
                   Row(
                     children: [
-                      // แสดงไอคอนแอนิเมชัน Lottie สำหรับรหัสผ่าน
                       SizedBox(
                         width: 50,
                         height: 50,
@@ -207,28 +190,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       Expanded(
                         child: TextFormField(
-                          obscureText: true, // ซ่อนรหัสผ่าน
-                          decoration: InputDecoration(labelText: 'Password'), // ป้ายกำกับ
+                          obscureText: true,
+                          decoration: InputDecoration(labelText: 'Password'),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your password'; // ตรวจสอบว่ากรอกรหัสผ่านหรือยัง
+                              return 'Please enter your password';
                             }
                             return null;
                           },
                           onChanged: (value) {
-                            _password = value; // อัปเดตรหัสผ่านเมื่อพิมพ์
+                            _password = value;
                           },
                         ),
                       ),
                     ],
                   ),
-        
-                  SizedBox(height: 20), // เว้นระยะห่าง
-        
-                  // 🔹 ช่องกรอกยืนยันรหัสผ่าน
+                  SizedBox(height: 20),
                   Row(
                     children: [
-                      // แสดงไอคอนแอนิเมชัน Lottie สำหรับยืนยันรหัสผ่าน
                       SizedBox(
                         width: 50,
                         height: 50,
@@ -238,28 +217,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       Expanded(
                         child: TextFormField(
-                          obscureText: true, // ซ่อนรหัสผ่าน
-                          decoration: InputDecoration(labelText: 'Confirm Password'), // ป้ายกำกับ
+                          obscureText: true,
+                          decoration:
+                              InputDecoration(labelText: 'Confirm Password'),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please confirm your password';
                             }
                             if (value != _password) {
-                              return 'Passwords do not match'; // ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
+                              return 'Passwords do not match';
                             }
                             return null;
                           },
                           onChanged: (value) {
-                            _confirmPassword = value; // อัปเดตค่าการยืนยันรหัสผ่านเมื่อพิมพ์
+                            _confirmPassword = value;
                           },
                         ),
                       ),
                     ],
                   ),
-        
-                  SizedBox(height: 15), // เว้นระยะห่าง
-        
-                  // 🔹 ปุ่มสมัครสมาชิก
+                  SizedBox(height: 15),
                   SizedBox(
                     width: 250,
                     child: ElevatedButton(
@@ -268,26 +245,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           registerWithEmailPassword(context, _email, _password);
                         }
                       },
-                      child: const Text('Register', style: TextStyle(fontSize: 16)),
-                              style: ElevatedButton.styleFrom(
-                                
-                                backgroundColor: Colors.orange,
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 15),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                              ),
+                      child: const Text('Register',
+                          style: TextStyle(fontSize: 16)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
                     ),
                   ),
-        
-                  SizedBox(height: 15), // เว้นระยะห่าง
-        
+                  SizedBox(height: 15),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       onPressed: signInWithGoogle,
-                      icon: Image.asset("assets/Icons/icon_google.png", height: 20, width: 20),
+                      icon: Image.asset("assets/Icons/icon_google.png",
+                          height: 20, width: 20),
                       label: const Text("Sign Up with Google"),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
@@ -298,15 +274,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ),
-        
                   SizedBox(height: 5),
-        
-                  // ปุ่มเข้าสู่ระบบด้วย Facebook
                   SizedBox(
                     width: 350,
                     child: ElevatedButton.icon(
-                      onPressed: () {}, // สามารถเพิ่มฟังก์ชันได้
-                       icon: Image.asset("assets/Icons/icon_facebook.png", height: 20, width: 20),
+                      onPressed: () {},
+                      icon: Image.asset("assets/Icons/icon_facebook.png",
+                          height: 20, width: 20),
                       label: Text("Sign Up with Facebook"),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
@@ -317,15 +291,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ),
-        
-                  // 🔹 ปุ่มกลับไปหน้าล็อกอิน
                   TextButton(
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => LoadingRegisterGoLoginScreen() // ไปหน้าล็อกอิน
-                        ),
+                            builder: (context) =>
+                                LoadingRegisterGoLoginScreen()),
                       );
                     },
                     child: Text.rich(
@@ -335,7 +307,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         children: <TextSpan>[
                           TextSpan(
                             text: "Login",
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.red),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: Colors.red),
                           ),
                         ],
                       ),

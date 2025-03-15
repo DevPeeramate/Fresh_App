@@ -6,18 +6,19 @@ class LoadingWelcomeGoLoginScreen extends StatefulWidget {
   const LoadingWelcomeGoLoginScreen({super.key});
 
   @override
-  State<LoadingWelcomeGoLoginScreen> createState() => _LoadingWelcomeGoLoginScreenState();
+  State<LoadingWelcomeGoLoginScreen> createState() =>
+      _LoadingWelcomeGoLoginScreenState();
 }
 
-class _LoadingWelcomeGoLoginScreenState extends State<LoadingWelcomeGoLoginScreen> {
+class _LoadingWelcomeGoLoginScreenState
+    extends State<LoadingWelcomeGoLoginScreen> {
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) => LoginScreen()),
+        MaterialPageRoute(builder: (context) => LoginScreen()),
       );
     });
   }
@@ -26,8 +27,7 @@ class _LoadingWelcomeGoLoginScreenState extends State<LoadingWelcomeGoLoginScree
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: const Color.fromARGB(
-            255, 255, 211, 174),
+        color: const Color.fromARGB(255, 255, 211, 174),
         padding: const EdgeInsets.fromLTRB(50, 20, 50, 0),
         child: Center(
           child: Stack(

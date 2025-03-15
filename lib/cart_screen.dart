@@ -37,7 +37,7 @@ class _CartScreenState extends State<CartScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); 
+                Navigator.of(context).pop();
               },
               child: const Text("Cancel"),
             ),
@@ -69,7 +69,12 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Your Cart",style: TextStyle(color: Colors.orange, fontSize: 22, fontWeight: FontWeight.bold),)),
+      appBar: AppBar(
+          title: const Text(
+        "Your Cart",
+        style: TextStyle(
+            color: Colors.orange, fontSize: 22, fontWeight: FontWeight.bold),
+      )),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("cart")
@@ -83,14 +88,16 @@ class _CartScreenState extends State<CartScreen> {
           var cartItems = snapshot.data!.docs;
 
           if (cartItems.isEmpty) {
-            return const Center(child: Text("Your cart is empty", style: TextStyle(fontSize: 18)));
+            return const Center(
+                child:
+                    Text("Your cart is empty", style: TextStyle(fontSize: 18)));
           }
 
           double total = 0;
           for (var item in cartItems) {
             var product = item.data();
-            double price = (product["price"] is String) 
-                ? double.tryParse(product["price"]) ?? 0 
+            double price = (product["price"] is String)
+                ? double.tryParse(product["price"]) ?? 0
                 : product["price"].toDouble();
             int quantity = product["quantity"] ?? 1;
             total += price * quantity;
@@ -104,39 +111,71 @@ class _CartScreenState extends State<CartScreen> {
                   itemBuilder: (context, index) {
                     var cartItem = cartItems[index].data();
                     String docID = cartItems[index].id;
+                    int quantity = cartItem["quantity"] ?? 1;
 
                     return Dismissible(
                       key: Key(docID),
                       direction: DismissDirection.endToStart,
                       background: Container(
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         color: Colors.red,
-                        child: const Icon(Icons.delete, color: Colors.white),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        alignment: Alignment.centerRight,
+                        child: const Icon(Icons.delete,
+                            color: Colors.white, size: 32),
                       ),
                       onDismissed: (direction) {
-                        removeItem(docID);
+                        FirebaseFirestore.instance
+                            .collection("cart")
+                            .doc(docID)
+                            .delete();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  "${cartItem["name"]} removed from cart")),
+                        );
                       },
                       child: Card(
                         margin: const EdgeInsets.all(10),
                         child: ListTile(
-                          leading: Image.network(cartItem["image"], width: 50, height: 50),
+                          leading: Image.network(cartItem["image"],
+                              width: 50, height: 50),
                           title: Text(cartItem["name"]),
-                          subtitle: Text("Price: \$${cartItem["price"]}"),
+                          subtitle:
+                              Text("Price: \$${cartItem["price"]} x $quantity"),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.remove_circle, color: Colors.red),
+                                icon: const Icon(Icons.remove_circle,
+                                    color: Colors.red),
                                 onPressed: () {
-                                  updateQuantity(docID, cartItem["quantity"] - 1);
+                                  if (quantity > 1) {
+                                    FirebaseFirestore.instance
+                                        .collection("cart")
+                                        .doc(docID)
+                                        .update({
+                                      "quantity": quantity - 1,
+                                    });
+                                  } else {
+                                    FirebaseFirestore.instance
+                                        .collection("cart")
+                                        .doc(docID)
+                                        .delete();
+                                  }
                                 },
                               ),
-                              Text(cartItem["quantity"].toString(), style: const TextStyle(fontSize: 18)),
+                              Text(quantity.toString(),
+                                  style: const TextStyle(fontSize: 18)),
                               IconButton(
-                                icon: const Icon(Icons.add_circle, color: Colors.green),
+                                icon: const Icon(Icons.add_circle,
+                                    color: Colors.green),
                                 onPressed: () {
-                                  updateQuantity(docID, cartItem["quantity"] + 1);
+                                  FirebaseFirestore.instance
+                                      .collection("cart")
+                                      .doc(docID)
+                                      .update({
+                                    "quantity": quantity + 1,
+                                  });
                                 },
                               ),
                             ],
@@ -151,14 +190,18 @@ class _CartScreenState extends State<CartScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    Text("Total: \$${total.toStringAsFixed(2)}", style: const TextStyle(fontSize: 18)),
+                    Text("Total: \$${total.toStringAsFixed(2)}",
+                        style: const TextStyle(fontSize: 18)),
                     const SizedBox(height: 10),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: checkoutCart,
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-                        child: const Text("Checkout", style: TextStyle(color: Colors.white, fontSize: 16)),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange),
+                        child: const Text("Checkout",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 16)),
                       ),
                     ),
                   ],

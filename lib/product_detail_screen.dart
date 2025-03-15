@@ -65,22 +65,50 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     });
   }
 
-  void addToCart() {
-    if (user == null) return;
+  void addToCart() async {
+    if (user == null) {
+      print("User not logged in");
+      return;
+    }
 
-    FirebaseFirestore.instance.collection("cart").add({
-      "userID": user!.uid,
-      "name": widget.product["name"],
-      "price": widget.product["price"],
-      "image": widget.product["image"],
-      "detail": widget.product["detail"],
-      "quantity": quantity,
-      "timestamp": FieldValue.serverTimestamp(),
-    }).then((_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("${widget.product['name']} added to cart!")),
-      );
-    });
+    var cartQuery = await FirebaseFirestore.instance
+        .collection("cart")
+        .where("userID", isEqualTo: user!.uid)
+        .where("name", isEqualTo: widget.product["name"])
+        .get();
+
+    if (cartQuery.docs.isNotEmpty) {
+      var cartItem = cartQuery.docs.first;
+      int currentQuantity = cartItem["quantity"] ?? 1;
+      int newQuantity = currentQuantity + quantity;
+
+      FirebaseFirestore.instance.collection("cart").doc(cartItem.id).update({
+        "quantity": newQuantity,
+      }).then((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content:
+                  Text("${widget.product['name']} quantity updated in cart!")),
+        );
+      }).catchError((error) {
+        print("Failed to update cart: $error");
+      });
+    } else {
+      FirebaseFirestore.instance.collection("cart").add({
+        "userID": user!.uid,
+        "name": widget.product["name"],
+        "price": widget.product["price"],
+        "image": widget.product["image"],
+        "quantity": quantity,
+        "timestamp": FieldValue.serverTimestamp(),
+      }).then((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("${widget.product['name']} added to cart!")),
+        );
+      }).catchError((error) {
+        print("Failed to add to cart: $error");
+      });
+    }
   }
 
   @override
@@ -99,7 +127,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(widget.product["name"], style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                Text(widget.product["name"],
+                    style: const TextStyle(
+                        fontSize: 22, fontWeight: FontWeight.bold)),
                 IconButton(
                   icon: Icon(
                     isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -109,7 +139,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ],
             ),
-            Text("\$${widget.product["price"]}", style: const TextStyle(fontSize: 18, color: Colors.orange)),
+            Text("\$${widget.product["price"]}",
+                style: const TextStyle(fontSize: 18, color: Colors.orange)),
             const SizedBox(height: 10),
             Text(
               widget.product["detail"] ?? "No detail available",
@@ -145,7 +176,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               child: ElevatedButton(
                 onPressed: addToCart,
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-                child: const Text("Add To Cart", style: TextStyle(color: Colors.white, fontSize: 16)),
+                child: const Text("Add To Cart",
+                    style: TextStyle(color: Colors.white, fontSize: 16)),
               ),
             ),
           ],

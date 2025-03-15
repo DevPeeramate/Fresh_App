@@ -22,14 +22,11 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        automaticallyImplyLeading: false, 
+        automaticallyImplyLeading: false,
         title: const Text(
           "Favorites",
           style: TextStyle(
-            color: Colors.orange,
-            fontSize: 22,
-            fontWeight: FontWeight.bold
-          ),
+              color: Colors.orange, fontSize: 22, fontWeight: FontWeight.bold),
         ),
       ),
       body: StreamBuilder(
@@ -46,11 +43,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
           if (favoriteItems.isEmpty) {
             return const Center(
-              child: Text(
-                "No favorites added yet",
-                style: TextStyle(fontSize: 18)
-              )
-            );
+                child: Text("No favorites added yet",
+                    style: TextStyle(fontSize: 18)));
           }
 
           return ListView.builder(
@@ -66,7 +60,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   color: Colors.red,
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: const Icon(Icons.delete, color: Colors.white, size: 30),
+                  child:
+                      const Icon(Icons.delete, color: Colors.white, size: 30),
                 ),
                 onDismissed: (direction) {
                   removeFromFavorites(docID);
@@ -86,7 +81,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ProductDetailScreen(product: favoriteItem),
+                          builder: (context) =>
+                              ProductDetailScreen(product: favoriteItem),
                         ),
                       );
                     },

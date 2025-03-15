@@ -18,8 +18,7 @@ class _LoadingLoginGoRegisterScreenState
     Future.delayed(Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) => RegisterScreen()),
+        MaterialPageRoute(builder: (context) => RegisterScreen()),
       );
     });
   }
@@ -28,8 +27,7 @@ class _LoadingLoginGoRegisterScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: const Color.fromARGB(
-            255, 255, 211, 174),
+        color: const Color.fromARGB(255, 255, 211, 174),
         padding: const EdgeInsets.fromLTRB(50, 20, 50, 0),
         child: Center(
           child: Stack(

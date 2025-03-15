@@ -15,12 +15,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final user = FirebaseAuth.instance.currentUser;
-  final List<String> categories = ["Fruits", "Vegetables", "Meat", "Fish", "Beverage"];
+  final List<String> categories = [
+    "Fruits",
+    "Vegetables",
+    "Meat",
+    "Fish",
+    "Beverage"
+  ];
   final Random random = Random();
   final TextEditingController searchController = TextEditingController();
 
   List<Map<String, dynamic>> searchResults = [];
-  List<Map<String, dynamic>> popularDeals = []; 
+  List<Map<String, dynamic>> popularDeals = [];
   bool isLoading = true;
 
   @override
@@ -35,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     List<Map<String, dynamic>> products = await getRandomProducts(3);
-    
+
     setState(() {
       popularDeals = products;
       isLoading = false;
@@ -79,7 +85,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Icon(Icons.location_on, color: Colors.orange),
             const SizedBox(width: 5),
             const Text("FreshApp",
-                style: TextStyle(color: Colors.orange, fontSize: 22, fontWeight: FontWeight.bold)),
+                style: TextStyle(
+                    color: Colors.orange,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold)),
           ],
         ),
       ),
@@ -107,7 +116,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -119,7 +127,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               const SizedBox(height: 10),
-
               SizedBox(
                 height: 100,
                 child: ListView(
@@ -138,7 +145,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -150,7 +156,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               const SizedBox(height: 10),
-
               isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : ListView.builder(
@@ -163,7 +168,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         return Card(
                           margin: const EdgeInsets.all(10),
                           child: ListTile(
-                            leading: Image.network(product["image"], width: 50, height: 50),
+                            leading: Image.network(product["image"],
+                                width: 50, height: 50),
                             title: Text(product["name"]),
                             subtitle: Text("Price: ${product["price"]}"),
                             onTap: () {
@@ -179,7 +185,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
-
               if (searchController.text.isNotEmpty) ...[
                 const SizedBox(height: 20),
                 const Text("Search Results",
@@ -200,7 +205,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           return Card(
                             margin: const EdgeInsets.all(10),
                             child: ListTile(
-                              leading: Image.network(product["image"], width: 50, height: 50),
+                              leading: Image.network(product["image"],
+                                  width: 50, height: 50),
                               title: Text(product["name"]),
                               subtitle: Text("Price: ${product["price"]} THB"),
                               onTap: () {

@@ -20,7 +20,8 @@ class ExploreScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: const Text(
           "Categories",
-          style: TextStyle(color: Colors.orange, fontSize: 22, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Colors.orange, fontSize: 22, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -41,7 +42,8 @@ class ExploreScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProductListScreen(category: category["name"]),
+                    builder: (context) =>
+                        ProductListScreen(category: category["name"]),
                   ),
                 );
               },
@@ -50,7 +52,8 @@ class ExploreScreen extends StatelessWidget {
                   CircleAvatar(
                     radius: 40,
                     backgroundColor: Colors.orange[100],
-                    child: Icon(category["icon"], color: Colors.orange, size: 30),
+                    child:
+                        Icon(category["icon"], color: Colors.orange, size: 30),
                   ),
                   const SizedBox(height: 5),
                   Text(category["name"], style: const TextStyle(fontSize: 14)),

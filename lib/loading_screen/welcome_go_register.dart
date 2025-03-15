@@ -6,18 +6,19 @@ class LoadingWelcomeGoRegisterScreen extends StatefulWidget {
   const LoadingWelcomeGoRegisterScreen({super.key});
 
   @override
-  State<LoadingWelcomeGoRegisterScreen> createState() => _LoadingWelcomeGoRegisterScreenState();
+  State<LoadingWelcomeGoRegisterScreen> createState() =>
+      _LoadingWelcomeGoRegisterScreenState();
 }
 
-class _LoadingWelcomeGoRegisterScreenState extends State<LoadingWelcomeGoRegisterScreen> {
+class _LoadingWelcomeGoRegisterScreenState
+    extends State<LoadingWelcomeGoRegisterScreen> {
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) => RegisterScreen()),
+        MaterialPageRoute(builder: (context) => RegisterScreen()),
       );
     });
   }
@@ -26,15 +27,14 @@ class _LoadingWelcomeGoRegisterScreenState extends State<LoadingWelcomeGoRegiste
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: const Color.fromARGB(
-            255, 255, 211, 174), 
+        color: const Color.fromARGB(255, 255, 211, 174),
         padding: const EdgeInsets.fromLTRB(50, 20, 50, 0),
         child: Center(
           child: Stack(
             alignment: Alignment.center,
             children: [
               SizedBox(
-                width: 150, 
+                width: 150,
                 height: 150,
                 child: LottieBuilder.network(
                   'https://lottie.host/3ccc1535-a81e-4e76-8560-7631c1579a33/5qzcCaARe3.json',
