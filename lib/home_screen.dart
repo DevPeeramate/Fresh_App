@@ -21,24 +21,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Map<String, dynamic>> searchResults = [];
   List<Map<String, dynamic>> popularDeals = []; 
-  bool isLoading = true; // ✅ ตัวแปรสถานะโหลดข้อมูล
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    loadPopularDeals(); // ✅ โหลด Popular Deals เมื่อเปิดแอป
+    loadPopularDeals();
   }
 
   void loadPopularDeals() async {
     setState(() {
-      isLoading = true; // 🔄 เริ่มโหลดข้อมูล
+      isLoading = true;
     });
 
     List<Map<String, dynamic>> products = await getRandomProducts(3);
     
     setState(() {
       popularDeals = products;
-      isLoading = false; // ✅ โหลดเสร็จแล้ว
+      isLoading = false;
     });
   }
 
@@ -88,7 +88,6 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // 🔎 Search Bar
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
@@ -109,7 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 20),
 
-              // 📂 Categories
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -141,7 +139,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 20),
 
-              // ⭐ Popular Deals
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -154,9 +151,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 10),
 
-              // 🔥 แสดงตัวโหลดก่อนแสดงข้อมูล
               isLoading
-                  ? const Center(child: CircularProgressIndicator()) // 🔄 กำลังโหลดข้อมูล
+                  ? const Center(child: CircularProgressIndicator())
                   : ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -184,7 +180,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
 
-              // 🔍 Search Results
               if (searchController.text.isNotEmpty) ...[
                 const SizedBox(height: 20),
                 const Text("Search Results",
@@ -229,7 +224,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 📌 ดึงสินค้าสุ่มจากทุกหมวดหมู่ (โหลดครั้งเดียว)
   Future<List<Map<String, dynamic>>> getRandomProducts(int count) async {
     List<Map<String, dynamic>> allProducts = [];
 
@@ -246,7 +240,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// 📌 Category Item Widget
 Widget CategoryItem(String title, IconData icon, BuildContext context) {
   return GestureDetector(
     onTap: () {

@@ -19,15 +19,12 @@ class AuthPage extends StatelessWidget {
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          // กรณีที่กำลังโหลดข้อมูล
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
-          // ถ้าผู้ใช้ล็อกอินอยู่ให้ไปหน้า AccountScreen
           if (snapshot.hasData) {
             return const AccountScreen();
           }
-          // ถ้ายังไม่ได้ล็อกอินให้ไปหน้า LoginScreen
           return const LoginScreen();
         },
       ),

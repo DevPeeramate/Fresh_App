@@ -18,7 +18,7 @@ class _CartScreenState extends State<CartScreen> {
 
   void updateQuantity(String docID, int newQuantity) {
     if (newQuantity <= 0) {
-      removeItem(docID); // ถ้าจำนวนลดลงเหลือ 0 ให้ลบสินค้าออก
+      removeItem(docID);
     } else {
       FirebaseFirestore.instance.collection("cart").doc(docID).update({
         "quantity": newQuantity,
@@ -28,7 +28,6 @@ class _CartScreenState extends State<CartScreen> {
 
   void checkoutCart() {
     if (user == null) return;
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -38,13 +37,12 @@ class _CartScreenState extends State<CartScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // ปิด Dialog
+                Navigator.of(context).pop(); 
               },
               child: const Text("Cancel"),
             ),
             TextButton(
               onPressed: () async {
-                // ลบสินค้าทั้งหมดในตะกร้าของผู้ใช้
                 var cartItems = await FirebaseFirestore.instance
                     .collection("cart")
                     .where("userID", isEqualTo: user!.uid)
@@ -54,9 +52,8 @@ class _CartScreenState extends State<CartScreen> {
                   item.reference.delete();
                 }
 
-                Navigator.of(context).pop(); // ปิด Dialog
+                Navigator.of(context).pop();
 
-                // แจ้งเตือนว่าการ Checkout สำเร็จ
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Order placed successfully!")),
                 );

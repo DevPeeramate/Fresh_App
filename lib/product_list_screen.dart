@@ -11,7 +11,7 @@ class ProductListScreen extends StatelessWidget {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("❌ Please login first!")),
+        const SnackBar(content: Text("Please login first!")),
       );
       return;
     }
@@ -27,7 +27,7 @@ class ProductListScreen extends StatelessWidget {
         SnackBar(content: Text("${product['name']} added to cart!")),
       );
     }).catchError((error) {
-      print("❌ Failed to add to cart: $error");
+      print("Failed to add to cart: $error");
     });
   }
 

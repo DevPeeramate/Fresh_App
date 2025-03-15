@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fresh_app/product_list_screen.dart';
 
-// ใช้ Categories เดียวกับ HomeScreen เพื่อให้เพิ่มได้ง่าย
 final List<Map<String, dynamic>> categories = [
   {"name": "Fruits", "icon": FontAwesomeIcons.apple},
   {"name": "Vegetables", "icon": FontAwesomeIcons.carrot},
@@ -29,7 +28,7 @@ class ExploreScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3, // 3 คอลัมน์
+            crossAxisCount: 3,
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
           ),

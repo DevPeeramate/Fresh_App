@@ -55,7 +55,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         "name": widget.product["name"],
         "price": widget.product["price"],
         "image": widget.product["image"],
-        "detail": widget.product["detail"], // อ่าน detail
+        "detail": widget.product["detail"],
         "timestamp": FieldValue.serverTimestamp(),
       });
     }
@@ -73,7 +73,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       "name": widget.product["name"],
       "price": widget.product["price"],
       "image": widget.product["image"],
-      "detail": widget.product["detail"], // อ่าน detail
+      "detail": widget.product["detail"],
       "quantity": quantity,
       "timestamp": FieldValue.serverTimestamp(),
     }).then((_) {
@@ -112,7 +112,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             Text("\$${widget.product["price"]}", style: const TextStyle(fontSize: 18, color: Colors.orange)),
             const SizedBox(height: 10),
             Text(
-              widget.product["detail"] ?? "No detail available", // อ่านค่ารายละเอียด
+              widget.product["detail"] ?? "No detail available",
               style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
             const SizedBox(height: 20),

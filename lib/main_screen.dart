@@ -49,7 +49,6 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
 
-        // ✅ ใช้ floatingActionButton เพื่อให้กดได้
         floatingActionButton: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection("cart")
@@ -71,7 +70,6 @@ class _MainScreenState extends State<MainScreen> {
                   child: const Icon(Icons.shopping_cart, size: 28, color: Colors.white),
                 ),
 
-                // ✅ แสดงตัวเลขจำนวนสินค้า (Positioned ด้านขวาบน)
                 if (itemCount > 0)
                   Positioned(
                     right: 0,
@@ -101,7 +99,7 @@ class _MainScreenState extends State<MainScreen> {
             );
           },
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat, // ✅ ให้ปุ่มอยู่ขวาล่าง
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
   }

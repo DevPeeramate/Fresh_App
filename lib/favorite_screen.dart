@@ -61,12 +61,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
               return Dismissible(
                 key: Key(docID),
-                direction: DismissDirection.endToStart, // เลื่อนซ้ายเพื่อลบ
+                direction: DismissDirection.endToStart,
                 background: Container(
                   color: Colors.red,
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: const Icon(Icons.delete, color: Colors.white, size: 30), // ไอคอนถังขยะ
+                  child: const Icon(Icons.delete, color: Colors.white, size: 30),
                 ),
                 onDismissed: (direction) {
                   removeFromFavorites(docID);
@@ -81,7 +81,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                     ),
                     title: Text(favoriteItem["name"]),
                     subtitle: Text("Price: \$${favoriteItem["price"]}"),
-                    trailing: const Icon(Icons.favorite, color: Colors.red), // แสดงรูปหัวใจสีแดง
+                    trailing: const Icon(Icons.favorite, color: Colors.red),
                     onTap: () {
                       Navigator.push(
                         context,

@@ -16,7 +16,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Scaffold(
       //----- Top part ------
       appBar: AppBar(
-        automaticallyImplyLeading: false, // ซ่อนปุ่มย้อนกลับอัตโนมัติ
+        automaticallyImplyLeading: false, // close back botton
       ),
 
       //----- Content part ------
@@ -32,7 +32,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.orange, // ✅ ใช้สีหลักของธีม
+                color: Colors.orange,
               ),
             ),
 
@@ -43,13 +43,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
                 fontSize: 15,
-                color: Colors.black87, // ✅ สีข้อความให้อ่านง่าย
+                color: Colors.black87,
               ),
             ),
 
             const SizedBox(height: 30),
 
-            // 🔹 ปุ่ม Sign Up
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -58,11 +57,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange, // ✅ ใช้สีหลักของแอป
+                backgroundColor: Colors.orange,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30), // ✅ โค้งมนเพื่อความสวยงาม
+                  borderRadius: BorderRadius.circular(30), 
                 ),
               ),
               child: const Text(
@@ -73,7 +72,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
             const SizedBox(height: 20),
 
-            // 🔹 ปุ่ม Sign In
             OutlinedButton(
               onPressed: () {
                 Navigator.push(
@@ -82,11 +80,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 );
               },
               style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Colors.orange, width: 2), // ✅ ใช้ขอบสีหลักของธีม
+                side: const BorderSide(color: Colors.orange, width: 2), 
                 foregroundColor: Colors.orange,
                 padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30), // ✅ โค้งมนเพื่อความสวยงาม
+                  borderRadius: BorderRadius.circular(30),
                 ),
               ),
               child: const Text(

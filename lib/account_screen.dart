@@ -13,7 +13,6 @@ class AccountScreen extends StatefulWidget {
 class _AccountScreenState extends State<AccountScreen> {
   final user = FirebaseAuth.instance.currentUser;
 
-  // ฟังก์ชัน Logout พร้อม Confirm Dialog
   void confirmSignOut() {
     showDialog(
       context: context,
@@ -34,19 +33,16 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
-  // ฟังก์ชัน Logout และกลับไปที่หน้า Welcome
   void signUserOut() async {
-    Navigator.pop(context); // ปิด Dialog
+    Navigator.pop(context);
 
     await FirebaseAuth.instance.signOut();
 
-    // เช็คก่อนว่าผู้ใช้ล็อกอินผ่าน Google หรือไม่
     final GoogleSignIn googleSignIn = GoogleSignIn();
     if (await googleSignIn.isSignedIn()) {
       await googleSignIn.signOut();
     }
 
-    // พาผู้ใช้กลับไปที่หน้า WelcomeScreen
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const WelcomeScreen()),
@@ -55,7 +51,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String profileImage = user?.photoURL ?? ""; // ดึง URL รูปภาพจาก Firebase
+    String profileImage = user?.photoURL ?? "";
 
     return Scaffold(
       appBar: AppBar(
@@ -69,16 +65,13 @@ class _AccountScreenState extends State<AccountScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // รูปโปรไฟล์ตรงกลาง
           CircleAvatar(
-            radius: 50, // ขนาดวงกลม
+            radius: 50, 
             backgroundImage: profileImage.isNotEmpty
-                ? NetworkImage(profileImage) // แสดงรูปจาก Google หากมี
-                : const AssetImage('assets/Images/default_profile.png') as ImageProvider, // แสดงรูป Default
+                ? NetworkImage(profileImage)
+                : const AssetImage('assets/Images/default_profile.png') as ImageProvider,
           ),
           const SizedBox(height: 15),
-
-          // แสดงอีเมลของผู้ใช้
           Center(
             child: Text(
               'Logged in as: ${user?.email ?? 'No email available'}',
@@ -86,8 +79,6 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
           ),
           const SizedBox(height: 20),
-
-          // ปุ่ม Logout พร้อม Confirm Dialog
           ElevatedButton.icon(
             onPressed: confirmSignOut,
             icon: const Icon(Icons.logout),
