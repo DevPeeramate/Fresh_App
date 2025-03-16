@@ -60,10 +60,8 @@ class _MainScreenState extends State<MainScreen> {
           onTap: _onItemTapped,
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.store), label: "Shop"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.explore), label: "Explore"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.favorite), label: "Favorite"),
+            BottomNavigationBarItem(icon: Icon(Icons.explore), label: "Explore"),
+            BottomNavigationBarItem(icon: Icon(Icons.favorite), label: "Favorite"),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: "Account"),
           ],
         ),

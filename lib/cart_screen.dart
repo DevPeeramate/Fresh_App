@@ -162,6 +162,11 @@ class _CartScreenState extends State<CartScreen> {
                                         .doc(docID)
                                         .delete();
                                   }
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            "${cartItem["name"]} removed from cart")),
+                                  );
                                 },
                               ),
                               Text(quantity.toString(),

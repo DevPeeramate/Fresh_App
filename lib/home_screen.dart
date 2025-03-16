@@ -134,13 +134,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   physics: const BouncingScrollPhysics(),
                   children: [
                     CategoryItem("Fruits", FontAwesomeIcons.apple, context),
-                    CategoryItem(
-                        "Vegetables", FontAwesomeIcons.carrot, context),
-                    CategoryItem(
-                        "Meat", FontAwesomeIcons.drumstickBite, context),
+                    CategoryItem("Vegetables", FontAwesomeIcons.carrot, context),
+                    CategoryItem("Meat", FontAwesomeIcons.drumstickBite, context),
                     CategoryItem("Fish", FontAwesomeIcons.fish, context),
-                    CategoryItem(
-                        "Beverage", FontAwesomeIcons.wineBottle, context),
+                    CategoryItem("Beverage", FontAwesomeIcons.wineBottle, context),
                   ],
                 ),
               ),

@@ -1,35 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'product_detail_screen.dart';
 
 class ProductListScreen extends StatelessWidget {
   final String category;
   const ProductListScreen({super.key, required this.category});
-
-  void addToCart(BuildContext context, Map<String, dynamic> product) {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please login first!")),
-      );
-      return;
-    }
-
-    FirebaseFirestore.instance.collection("cart").add({
-      "userID": user.uid,
-      "name": product["name"],
-      "price": product["price"],
-      "image": product["image"],
-      "timestamp": FieldValue.serverTimestamp(),
-    }).then((_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("${product['name']} added to cart!")),
-      );
-    }).catchError((error) {
-      print("Failed to add to cart: $error");
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
