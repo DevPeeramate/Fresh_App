@@ -23,7 +23,12 @@ Future<void> registerWithEmailPassword(
     print("Registration Successful: ${userCredential.user!.email}");
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Registration Successful")),
+      SnackBar(content: Text("Registration Successful",
+      style: TextStyle(color: Colors.white),
+      
+      ),
+      backgroundColor: Colors.green,
+      ),
     );
 
     Navigator.pushReplacement(
@@ -39,7 +44,11 @@ Future<void> registerWithEmailPassword(
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(errorMessage)),
+      SnackBar(content: Text(errorMessage,
+      style: TextStyle(color: Colors.white),
+      
+      ),
+      backgroundColor: Colors.red,),
     );
   }
 }

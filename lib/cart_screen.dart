@@ -55,7 +55,13 @@ class _CartScreenState extends State<CartScreen> {
                 Navigator.of(context).pop();
 
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Order placed successfully!")),
+                  const SnackBar(
+                    content: Text(
+                      "Order placed successfully!",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    backgroundColor: Colors.green,
+                  ),
                 );
               },
               child: const Text("Confirm"),
@@ -130,8 +136,12 @@ class _CartScreenState extends State<CartScreen> {
                             .delete();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                              content: Text(
-                                  "${cartItem["name"]} removed from cart")),
+                            content: Text(
+                              "${cartItem["name"]} removed from cart",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            backgroundColor: Colors.red,
+                          ),
                         );
                       },
                       child: Card(
@@ -162,11 +172,6 @@ class _CartScreenState extends State<CartScreen> {
                                         .doc(docID)
                                         .delete();
                                   }
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            "${cartItem["name"]} removed from cart")),
-                                  );
                                 },
                               ),
                               Text(quantity.toString(),

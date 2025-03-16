@@ -88,7 +88,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content:
-                  Text("${widget.product['name']} quantity updated in cart!")),
+                  Text("${widget.product['name']} added to cart!",
+                  style: TextStyle(color: Colors.white),
+      
+      ),
+      backgroundColor: Colors.green,),
         );
       }).catchError((error) {
         print("Failed to update cart: $error");
@@ -103,7 +107,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         "timestamp": FieldValue.serverTimestamp(),
       }).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("${widget.product['name']} added to cart!")),
+          SnackBar(content: Text("${widget.product['name']} added to cart!",
+          style: TextStyle(color: Colors.white),
+      
+      ),
+      backgroundColor: Colors.green,
+          ),
         );
       }).catchError((error) {
         print("Failed to add to cart: $error");
