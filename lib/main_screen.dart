@@ -68,7 +68,6 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
 
-        // 📌 แสดงจำนวนสินค้าทั้งหมดในไอคอนตะกร้า
         floatingActionButton: StreamBuilder<int>(
           stream: getCartItemCount(),
           builder: (context, snapshot) {

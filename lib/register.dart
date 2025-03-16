@@ -1,13 +1,10 @@
-// นำเข้าแพ็กเกจที่จำเป็นสำหรับแอปพลิเคชัน
-import 'package:flutter/material.dart'; // ใช้สำหรับสร้าง UI ตามแนวทาง Material Design
-import 'package:lottie/lottie.dart'; // ใช้สำหรับแสดงภาพเคลื่อนไหวจากไฟล์ JSON (Lottie Animations)
-import 'loading_screen/loading_register_go_login.dart'; // นำเข้าไฟล์ที่ใช้สำหรับการเปลี่ยนไปหน้าล็อกอินหลังจากสมัครสมาชิกสำเร็จ
+import 'package:flutter/material.dart'; 
+import 'package:lottie/lottie.dart'; 
+import 'loading_screen/loading_register_go_login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'main_screen.dart';
 
-// ✅ สร้างคลาส RegisterScreen ซึ่งเป็น **StatefulWidget**
-//    เนื่องจากมีการเปลี่ยนแปลงข้อมูล (State) เช่น การกรอกอีเมล, รหัสผ่าน และยืนยันรหัสผ่าน
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -34,7 +31,6 @@ Future<void> registerWithEmailPassword(
       MaterialPageRoute(builder: (context) => LoadingRegisterGoLoginScreen()),
     );
   } on FirebaseAuthException catch (e) {
-    // ตรวจสอบข้อผิดพลาดของ Firebase
     String errorMessage = "Registration failed";
     if (e.code == 'weak-password') {
       errorMessage = "The password provided is too weak.";
